@@ -1,0 +1,26 @@
+{
+  "name": "propin",
+  "version": "1.0.0",
+  "description": "lightweight dependency injection library for TypeScript projects",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iKBAHT/propin.git"
+  },
+  "keywords": [
+    "di",
+    "dependency",
+    "injection",
+    "typescript",
+    "ioc"
+  ],
+  "author": "iKBAHT",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/iKBAHT/propin/issues"
+  },
+  "homepage": "https://github.com/iKBAHT/propin#readme"
+}
