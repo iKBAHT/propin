@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "description": "lightweight dependency injection library for TypeScript projects",
   "main": "dist/index.js",
+  "typings": "./dist/index.d.ts",
   "scripts": {
-    "test": "ts-node test/index.test.ts"
+    "test": "ts-node test/index.test.ts",
+    "prepublish": "tsc"
   },
   "repository": {
     "type": "git",

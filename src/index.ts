@@ -7,7 +7,7 @@ export interface Newable<T> {
   new (...args: any[]): T;
 }
 
-interface BindCases<T> {
+export interface BindCases<T> {
   toInstance: (instance: T) => void
 }
 

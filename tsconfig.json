@@ -8,7 +8,6 @@
         "types": [
             "reflect-metadata"
         ],
-        "sourceMap": true,
         "module": "commonjs",
         "moduleResolution": "node",
         "experimentalDecorators": true,
@@ -16,6 +15,11 @@
         "noImplicitAny": true,
         "removeComments": true,
         "preserveConstEnums": true,
-        "strictNullChecks": true
-    }
+        "strictNullChecks": true,
+        "declaration": true,
+        "outDir": "dist/"
+    },
+    "files": [
+        "./src/index.ts"
+    ]
 }
