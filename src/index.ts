@@ -12,6 +12,7 @@ export interface BindCases<T> {
 }
 
 const PROPERTY_TYPE_METADATA = 'design:type';
+const INJECTION_INSTANCE_METADATA = Symbol();
 let kernel: Map<number, ClassInstance> = new Map();
 
 export const injector = {
@@ -55,17 +56,22 @@ function defineProperty(
   key: string,
   resolve: () => ClassInstance
 ) {
-  let instance: ClassInstance;
 
   function getter() {
-    if (!instance) {
-      instance = resolve();
+    if (!Reflect.hasMetadata(INJECTION_INSTANCE_METADATA, proto, key)) {
+      setter(resolve());
     }
-    return instance;
+    return Reflect.getMetadata(INJECTION_INSTANCE_METADATA, proto, key);
   }
+
+  function setter(newInstance: ClassInstance) {
+    Reflect.defineMetadata(INJECTION_INSTANCE_METADATA, newInstance, proto, key);
+  }
+
   Object.defineProperty(proto, key, {
     configurable: true,
     enumerable: true,
-    get: getter
+    get: getter,
+    set: setter
   });
 }
