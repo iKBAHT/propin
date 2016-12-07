@@ -58,14 +58,14 @@ function defineProperty(
 ) {
 
   function getter() {
-    if (!Reflect.hasMetadata(INJECTION_INSTANCE_METADATA, proto, key)) {
-      setter(resolve());
+    if (!Reflect.hasMetadata(INJECTION_INSTANCE_METADATA, this, key)) {
+      Reflect.defineMetadata(INJECTION_INSTANCE_METADATA, resolve(), this, key);
     }
-    return Reflect.getMetadata(INJECTION_INSTANCE_METADATA, proto, key);
+    return Reflect.getMetadata(INJECTION_INSTANCE_METADATA, this, key);
   }
 
   function setter(newInstance: ClassInstance) {
-    Reflect.defineMetadata(INJECTION_INSTANCE_METADATA, newInstance, proto, key);
+    Reflect.defineMetadata(INJECTION_INSTANCE_METADATA, newInstance, this, key);
   }
 
   Object.defineProperty(proto, key, {

@@ -59,6 +59,29 @@ it('with bind', () => {
 
 injector.clean();
 
+it('change bind on the fly', () => {
+  class Arena {
+    @inject()
+    public robot: Robot;
+  }
+
+  const robot1 = new Robot('rob1');
+  injector.bind<Robot>(Robot).toInstance(robot1);
+  let arena1 = new Arena();
+
+  console.assert(arena1.robot === robot1, 'robot1');
+
+
+  const robot2 = new Robot('rob2');
+  injector.clean();
+  injector.bind<Robot>(Robot).toInstance(robot2);
+  let arena2 = new Arena();
+
+  console.assert(arena2.robot === robot2, 'robot2');
+});
+
+injector.clean();
+
 it('with two different binds', () => {
   const robot = new Robot('rob');
   injector.bind<Robot>(Robot).toInstance(robot);
@@ -157,4 +180,24 @@ it('inject in inherited class', () => {
   console.assert(arena.human1 === human, 'human1');
   console.assert(arena.human2 === human, 'human2');
   console.assert(arena.woman === woman, 'woman');
+});
+
+injector.clean();
+
+it('set prop by hand', () => {
+  class Arena {
+    @inject()
+    public robot: Robot;
+  }
+
+  const robot1 = new Robot('rob1');
+  injector.bind<Robot>(Robot).toInstance(robot1);
+  let arena1 = new Arena();
+  let arena2 = new Arena();
+
+  const robot2 = new Robot('rob2');
+  arena1.robot = robot2; 
+
+  console.assert(arena1.robot === robot2, 'arena1');
+  console.assert(arena2.robot === robot1, 'arena2');
 });
