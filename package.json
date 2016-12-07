@@ -1,6 +1,6 @@
 {
   "name": "propin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "lightweight dependency injection library for TypeScript projects",
   "main": "dist/index.js",
   "typings": "./dist/index.d.ts",
