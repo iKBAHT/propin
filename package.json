@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/iKBAHT/propin/issues"
   },
-  "homepage": "https://github.com/iKBAHT/propin#readme"
+  "homepage": "https://github.com/iKBAHT/propin#readme",
+  "dependencies": {
+    "reflect-metadata": "^0.1.8"
+  }
 }
