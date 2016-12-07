@@ -1,4 +1,5 @@
 import "reflect-metadata";
+import { hashCode } from './hash';
 
 type ClassInstance = Object;
 
@@ -11,13 +12,13 @@ interface BindCases<T> {
 }
 
 const PROPERTY_TYPE_METADATA = 'design:type';
-let kernel: Map<string, ClassInstance> = new Map();
+let kernel: Map<number, ClassInstance> = new Map();
 
 export const injector = {
   bind: function <T extends Object>(classConstructor: Newable<T>): BindCases<T> {
     return {
       toInstance: (instance: T): void => {
-        const classConstructorHash = classConstructor.toString();
+        const classConstructorHash = hashCode(classConstructor.toString());
         const prevBind = kernel.get(classConstructorHash);
         if (prevBind) {
           throw new Error(classConstructor + ' already has been binded to ' + prevBind);
@@ -35,7 +36,7 @@ export function inject() {
   return function (proto: any, key: string): void {
     const classConstructor: Newable<any> = Reflect.getMetadata(PROPERTY_TYPE_METADATA, proto, key);
     let resolve = (): ClassInstance | undefined => {
-      const instance = kernel.get(classConstructor.toString());
+      const instance = kernel.get(hashCode(classConstructor.toString()));
       return instance;
     };
 
