@@ -4,7 +4,7 @@ import { it } from './testLib';
 class Robot {
   constructor(protected name: string) { }
   getInfo() {
-    return this.name; 
+    return this.name;
   }
 }
 
@@ -27,9 +27,13 @@ it('without bind', () => {
     public robot: Robot;
   }
 
-  let arena = new Arena();
-
-  console.assert(arena.robot === void 0);
+  let arena: Arena;
+  try {
+    arena = new Arena();
+  } catch (error) {
+    console.assert(error != null, 'error throwed');
+    console.assert(error.toString().indexOf('cannot find binded instance for') !== -1);
+  }
 });
 
 it('with bind', () => {
@@ -48,6 +52,9 @@ it('with bind', () => {
 
   console.assert(arena.robot1 === robot, 'robot1');
   console.assert(arena.robot2 === robot, 'robot2');
+
+  console.assert(arena.robot1 === robot, 'robot1 second check');
+  console.assert(arena.robot2 === robot, 'robot2 second check');
 });
 
 injector.clean();
@@ -85,6 +92,7 @@ it('with two equal binds', () => {
     injector.bind<Robot>(Robot).toInstance(robot2);
   } catch (error) {
     console.assert(error != null, 'error throwed');
+    console.assert(error.toString().indexOf('already has been binded to') !== -1);
   }
 });
 
@@ -108,5 +116,45 @@ it('with two inherited binds', () => {
   let arena = new Arena();
 
   console.assert(arena.human === human, 'human');
+  console.assert(arena.woman === woman, 'woman');
+});
+
+injector.clean();
+
+it('inject in inherited class', () => {
+  const robot = new Robot('rob');
+  injector.bind<Robot>(Robot).toInstance(robot);
+
+  const human = new Human('arnold');
+  injector.bind<Human>(Human).toInstance(human);
+
+  const woman = new Woman('anna');
+  injector.bind<Woman>(Woman).toInstance(woman);
+
+  class Arena {
+    @inject()
+    public robot1: Robot;
+
+    @inject()
+    public human1: Human;
+  }
+
+  class NewArena extends Arena {
+    @inject()
+    public robot2: Robot;
+
+    @inject()
+    public human2: Human;
+
+    @inject()
+    public woman: Woman;
+  }
+
+  let arena = new NewArena();
+
+  console.assert(arena.robot1 === robot, 'robot1');
+  console.assert(arena.robot2 === robot, 'robot2');
+  console.assert(arena.human1 === human, 'human1');
+  console.assert(arena.human2 === human, 'human2');
   console.assert(arena.woman === woman, 'woman');
 });

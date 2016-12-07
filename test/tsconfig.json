@@ -10,13 +10,10 @@
         ],
         "module": "commonjs",
         "moduleResolution": "node",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
         "noImplicitAny": true,
         "removeComments": true,
-        "strictNullChecks": true,
-        "declaration": true,
-        "outDir": "dist/"
-    },
-    "files": [
-        "./src/index.ts"
-    ]
+        "strictNullChecks": true
+    }
 }

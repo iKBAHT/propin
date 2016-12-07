@@ -35,8 +35,14 @@ export const injector = {
 export function inject() {
   return function (proto: any, key: string): void {
     const classConstructor: Newable<any> = Reflect.getMetadata(PROPERTY_TYPE_METADATA, proto, key);
-    let resolve = (): ClassInstance | undefined => {
+    if (!classConstructor) {
+      throw new Error('cannot find type of propperty ' + key + ' in ' + proto);
+    }
+    let resolve = (): ClassInstance => {
       const instance = kernel.get(hashCode(classConstructor.toString()));
+      if (!instance) {
+        throw new Error('cannot find binded instance for ' + classConstructor);
+      }
       return instance;
     };
 
@@ -47,12 +53,19 @@ export function inject() {
 function defineProperty(
   proto: any,
   key: string,
-  resolve: () => ClassInstance | undefined
+  resolve: () => ClassInstance
 ) {
+  let instance: ClassInstance;
+
+  function getter() {
+    if (!instance) {
+      instance = resolve();
+    }
+    return instance;
+  }
   Object.defineProperty(proto, key, {
-    configurable: false,
+    configurable: true,
     enumerable: true,
-    writable: false,
-    value: resolve()
+    get: getter
   });
 }
