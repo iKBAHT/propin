@@ -4,7 +4,7 @@
   "description": "lightweight dependency injection library for TypeScript projects",
   "main": "dist/index.js",
   "scripts": {
-    "test": "test"
+    "test": "ts-node test/index.test.ts"
   },
   "repository": {
     "type": "git",
@@ -24,6 +24,10 @@
   },
   "homepage": "https://github.com/iKBAHT/propin#readme",
   "dependencies": {
-    "reflect-metadata": "^0.1.8"
+    "reflect-metadata": "0.1.8",
+    "typescript": "2.0.10"
+  },
+  "devDependencies": {
+    "ts-node": "^1.7.0"
   }
 }

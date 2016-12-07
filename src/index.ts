@@ -17,20 +17,25 @@ export const injector = {
   bind: function <T extends Object>(classConstructor: Newable<T>): BindCases<T> {
     return {
       toInstance: (instance: T): void => {
-        kernel.set(classConstructor.toString(), instance);
+        const classConstructorHash = classConstructor.toString();
+        const prevBind = kernel.get(classConstructorHash);
+        if (prevBind) {
+          throw new Error(classConstructor + ' already has been binded to ' + prevBind);
+        }
+        kernel.set(classConstructorHash, instance);
       }
     }
+  },
+  clean: function (): void {
+    kernel.clear();
   }
 };
 
 export function inject() {
   return function (proto: any, key: string): void {
     const classConstructor: Newable<any> = Reflect.getMetadata(PROPERTY_TYPE_METADATA, proto, key);
-    let resolve = (): ClassInstance => {
+    let resolve = (): ClassInstance | undefined => {
       const instance = kernel.get(classConstructor.toString());
-      if (!instance) {
-        throw new Error('');
-      }
       return instance;
     };
 
@@ -41,7 +46,7 @@ export function inject() {
 function defineProperty(
   proto: any,
   key: string,
-  resolve: () => ClassInstance
+  resolve: () => ClassInstance | undefined
 ) {
   Object.defineProperty(proto, key, {
     configurable: false,
