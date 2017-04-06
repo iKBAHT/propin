@@ -196,7 +196,7 @@ it('set prop by hand', () => {
   let arena2 = new Arena();
 
   const robot2 = new Robot('rob2');
-  arena1.robot = robot2; 
+  arena1.robot = robot2;
 
   console.assert(arena1.robot === robot2, 'arena1');
   console.assert(arena2.robot === robot1, 'arena2');

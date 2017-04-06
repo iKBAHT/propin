@@ -26,10 +26,10 @@
   },
   "homepage": "https://github.com/iKBAHT/propin#readme",
   "dependencies": {
-    "reflect-metadata": "0.1.8"
+    "reflect-metadata": "0.1.10"
   },
   "devDependencies": {
-    "ts-node": "1.7.0",
-    "typescript": "2.0.10"
+    "ts-node": "3.0.2",
+    "typescript": "2.2.2"
   }
 }

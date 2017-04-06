@@ -1,5 +1,4 @@
-import "reflect-metadata";
-import { hashCode } from './hash';
+import 'reflect-metadata';
 
 type ClassInstance = Object;
 
@@ -12,19 +11,27 @@ export interface BindCases<T> {
 }
 
 const PROPERTY_TYPE_METADATA = 'design:type';
-const INJECTION_INSTANCE_METADATA = Symbol();
+const INJECTION_INSTANCE_METADATA = typeof Symbol !== 'undefined' ? Symbol() : '__PROPIN__METADATA';
+const INJECTION_INSTANCE_CLASSID = typeof Symbol !== 'undefined' ? Symbol() : '__PROPIN__CLASSID';
+
 let kernel: Map<number, ClassInstance> = new Map();
+let instanceId = 0;
 
 export const injector = {
   bind: function <T extends Object>(classConstructor: Newable<T>): BindCases<T> {
     return {
       toInstance: (instance: T): void => {
-        const classConstructorHash = hashCode(classConstructor.toString());
-        const prevBind = kernel.get(classConstructorHash);
+        let classId: number;
+        if (Object.prototype.hasOwnProperty.call(classConstructor, INJECTION_INSTANCE_CLASSID)) {
+          classId = (classConstructor as any)[INJECTION_INSTANCE_CLASSID]
+        } else {
+          (classConstructor as any)[INJECTION_INSTANCE_CLASSID] = classId = ++instanceId;
+        }
+        const prevBind = kernel.get(classId);
         if (prevBind) {
           throw new Error(classConstructor + ' already has been binded to ' + prevBind);
         }
-        kernel.set(classConstructorHash, instance);
+        kernel.set(classId, instance);
       }
     }
   },
@@ -40,7 +47,7 @@ export function inject() {
       throw new Error('cannot find type of propperty ' + key + ' in ' + proto);
     }
     let resolve = (): ClassInstance => {
-      const instance = kernel.get(hashCode(classConstructor.toString()));
+      const instance = kernel.get((classConstructor as any)[INJECTION_INSTANCE_CLASSID]);
       if (!instance) {
         throw new Error('cannot find binded instance for ' + classConstructor);
       }
